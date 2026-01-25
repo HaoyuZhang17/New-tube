@@ -15,6 +15,7 @@ interface PageProps {
 const Page = async ({params}: PageProps) => {
 
     //将解构前的数据params存入解构后的videoId
+    //因为我要用videoid这一个值，所以我要再解构一遍
     const {videoId} = await params;
 
     return (
