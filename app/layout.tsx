@@ -5,8 +5,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+//引入clerk
+import { ClerkProvider } from "@clerk/nextjs";
+
 //生成一个叫inter的实例，它使用google字体Inter的子集latin
-const inter = Inter({ subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,13 +22,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      {/* 给全局的body加了一个classname，其中里面是字体inter以及它的classname */}
-      <body
-        className={inter.className}
-      >
-        {children}
-      </body>
-    </html>
+    // 将所有内容包在provider里
+    <ClerkProvider>
+      <html lang="en">
+        {/* 给全局的body加了一个classname，其中里面是字体inter以及它的classname */}
+        <body
+          className={inter.className}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
+
   );
 }
