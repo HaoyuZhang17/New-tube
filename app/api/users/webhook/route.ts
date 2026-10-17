@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { db } from '@/db';
 import {users} from '@/db/schema'
+import { eq } from "drizzle-orm";
 
 //这个api专门接收post请求
 export async function POST(req: Request) {
@@ -54,7 +55,7 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const data = evt.data;
+    const {data} = evt
 
     await db.insert(users).values({
       clerkId: data.id,
@@ -64,12 +65,24 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.deleted") {
-    const data = evt.data;
+    const {data} = evt;
 
-    await (await db.delete(users)).rows({
-      
-    })
+    if (!data.id) {
+      return new Response("Missing user id", {status : 400}); 
+    }
+
+    await db.delete(users).where(eq(users.clerkId, data.id));
   }
 
-  return new Response("", { status: 200 });
+  if (eventType === "user.updated") {
+    const {data} = evt;
+
+    await db.update(users).set({
+      name: `${data.first_name} ${data.last_name}`,
+      imageUrl: data.image_url,
+    })
+    .where(eq(users.clerkId, data.id));
+  }
+
+  return new Response('Webhook received', { status: 200 });
 }
