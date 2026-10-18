@@ -7,6 +7,8 @@ import "./globals.css";
 
 //引入clerk
 import { ClerkProvider } from "@clerk/nextjs";
+//引入tRPC
+import { TRPCProvider } from "@/trpc/client";
 
 //生成一个叫inter的实例，它使用google字体Inter的子集latin
 const inter = Inter({ subsets: ["latin"] });
@@ -23,14 +25,16 @@ export default function RootLayout({
 }>) {
   return (
     // 将所有内容包在provider里
-      //afterSignOutUrl="/": always come back root page,and this is default
+    //afterSignOutUrl="/": always come back root page,and this is default
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
         {/* 给全局的body加了一个classname，其中里面是字体inter以及它的classname */}
         <body
           className={inter.className}
         >
-          {children}
+          <TRPCProvider>
+            {children}
+          </TRPCProvider>
         </body>
       </html>
     </ClerkProvider>
