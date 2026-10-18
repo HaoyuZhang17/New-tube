@@ -1,5 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { cache } from 'react';
+import superjson from "superjson"
 
 export const createTRPCContext = cache(async () => {
   /**
@@ -16,7 +17,8 @@ const t = initTRPC.create({
   /**
    * @see https://trpc.io/docs/server/data-transformers
    */
-  // transformer: superjson,
+//   transformer: superjson = 让 tRPC 更完整地转换前后端传输的数据。
+    transformer: superjson,
 });
 
 // Base router and procedure helpers
