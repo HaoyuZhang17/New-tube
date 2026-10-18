@@ -1,3 +1,6 @@
+//配置react query缓存
+
+
 import {
   defaultShouldDehydrateQuery,
   QueryClient,

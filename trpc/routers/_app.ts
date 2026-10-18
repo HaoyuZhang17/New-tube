@@ -1,9 +1,11 @@
+//定义后端有哪些tRPC API
+
 import { z } from "zod";
 import { baseProcedure, createTRPCRouter } from "../init";
-import { TRPCError } from "@trpc/server";
+
 
 export const appRouter = createTRPCRouter({
-    //定义hello接口
+    //定义hello接口 
   hello: baseProcedure
     .input(
       z.object({
@@ -11,7 +13,7 @@ export const appRouter = createTRPCRouter({
       }),
     )
     .query((opts) => {
-
+        console.log({ fromContext: opts.ctx.clerkUserId})
         
       return {
         greeting: `hello ${opts.input.text}`,
