@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { baseProcedure, createTRPCRouter } from "../init";
+import { TRPCError } from "@trpc/server";
 
 export const appRouter = createTRPCRouter({
+    //定义hello接口
   hello: baseProcedure
     .input(
       z.object({
@@ -9,6 +11,8 @@ export const appRouter = createTRPCRouter({
       }),
     )
     .query((opts) => {
+
+        
       return {
         greeting: `hello ${opts.input.text}`,
       };
