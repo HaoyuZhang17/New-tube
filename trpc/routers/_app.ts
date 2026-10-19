@@ -6,14 +6,14 @@ import { baseProcedure, createTRPCRouter, protectedProcedure } from "../init";
 
 export const appRouter = createTRPCRouter({
     //定义hello接口 
-  hello: baseProcedure
+  hello: protectedProcedure
     .input(
       z.object({
         text: z.string(),
       }),
     )
     .query((opts) => {
-        console.log({ fromContext: opts.ctx.clerkUserId})
+        console.log({ dbUser: opts.ctx.user})
         
       return {
         greeting: `hello ${opts.input.text}`,
