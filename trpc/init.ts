@@ -1,13 +1,9 @@
 //这个文件初始化、配置 tRPC---Context、superjson 等
-
 // async 函数
 //    ↓
 // Promise<数据>
-
 // 要数据 → await
 // 要数据的类型 → Awaited
-
-
 import { auth } from '@clerk/nextjs/server';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { cache } from 'react';
@@ -15,7 +11,9 @@ import superjson from "superjson";
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-
+//Ratelimit
+import { redis } from '@/lib/redis';
+import { ratelimit } from '@/lib/ratelimit';
 
 //上下文的作用：每次trpc请求时，给后端的procedure准备一份这个请求的公共信息
 export const createTRPCContext = cache(async () => {
@@ -63,6 +61,11 @@ export const protectedProcedure = t.procedure.use(async function isAuthed(opts) 
     //检查登录的id是否存在数据库
     if (!user) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+    //检查用户是否超过了ratelimit
+    const { success } = await ratelimit.limit(user.id);
+    if (!success) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS' });
     }
     //next：继续执行后续procedure
     //...ctx users 就是把原来的 context 和 users 继续传下去
