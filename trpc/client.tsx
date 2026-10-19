@@ -51,6 +51,12 @@ export function TRPCProvider(
         httpBatchLink({
           transformer: superjson, 
           url: getUrl(),
+          //给每次从客户端发出去的 tRPC 请求，加一个“标签”，告诉服务器：这个请求是从哪里来的。
+          async headers() {
+            const headers = new Headers();
+            headers.set("x-trpc-source", "nextjs-react");
+            return headers;
+          }
         }),
       ],
     }),
