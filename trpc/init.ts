@@ -9,7 +9,7 @@
 
 
 import { auth } from '@clerk/nextjs/server';
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { cache } from 'react';
 import superjson from "superjson"
 
@@ -40,3 +40,22 @@ const t = initTRPC.context<Context>().create({
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure;
+//必须登录才能使用的procedure
+    //opts是trpc在执行的时候自动给的参数
+export const protectedProcedure = t.procedure.use(async function isAuthed(opts) {
+
+    // 从 opts 中拿到当前请求的 context
+    const { ctx } = opts;
+    //如果其中不包含id，报错
+    if(!ctx.clerkUserId) {
+        throw new TRPCError({ code: "UNAUTHORIZED"});
+    }
+    //否则继续执行api
+        //next：继续执行后续procedure
+        //...ctx 就是把原来的 context 继续传下去
+    return opts.next({
+        ctx: {
+            ...ctx,
+        }
+    })
+});
