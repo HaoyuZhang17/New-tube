@@ -19,3 +19,11 @@ export const users = pgTable("users", {
     //给 clerkId 建立唯一索引
     //t 不是 users，而是 pgTable() 在创建 users 表时，自动传进来的”当前表对象”。
 }, (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)]);
+
+export const categories = pgTable("categories", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull().unique(),
+    description: text("description"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (t) => [uniqueIndex("name_idx").on(t.name)]);
