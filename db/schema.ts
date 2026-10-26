@@ -1,5 +1,4 @@
 //drizzle定义数据库表
-
 //导入数据类型和工具
 import {pgTable, text, timestamp, uniqueIndex, uuid} from "drizzle-orm/pg-core";
 

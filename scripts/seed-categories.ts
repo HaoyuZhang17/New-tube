@@ -1,4 +1,4 @@
-//TODO: Create a scripe to seeed categories 
+//数据库种子脚本
 
 import { db } from "@/db"
 import { categories } from "@/db/schema"
@@ -26,7 +26,7 @@ async function main() {
     try {
         const values = categoryNames.map((name) => ({
             name,
-            description: `Vidoes related to ${name.toLowerCase()}`,
+            description: `Videos related to ${name.toLowerCase()}`,
         }));
 
         await db.insert(categories).values(values);
@@ -35,8 +35,10 @@ async function main() {
 
     } catch (error) {
         console.error("Error seeding categories: ", error);
+        //1:出错结束代码
         process.exit(1);
     }
 }
 
+//执行main
 main()
