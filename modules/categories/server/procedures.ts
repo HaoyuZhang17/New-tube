@@ -13,3 +13,14 @@ export const categoriesRouter = createTRPCRouter({
         return data;
     }),
 });
+
+// categoriesRouter
+// 类别相关 API
+//       ↓
+// 注册到
+// appRouter
+// 总 API
+//       ↓
+// 前端能通过
+// trpc.categories.xxx
+// 来调用
