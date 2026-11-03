@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel"
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 
 
@@ -24,16 +25,34 @@ interface FilterCarouselProps {
 }
 
 export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarouselProps) => {
+
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        if (!api) {
+            return;
+        }
+
+        setCount(api.scrollSnapList().length);
+        setCurrent(api.selectedScrollSnap()+1);
+
+        api.on("select", ()=> {
+            setCurrent(api.selectedScrollSnap()+1);
+        })
+    }, [api]);
     return (
         <div className="relative w-full">
             {/* left fade */}
             <div 
             className={cn(
                  "absolute left-12 top-0 bottom-0 w-12 z-10 bg-linear-to-r from-white to-transparent pointer-events-none",
-                 false && "hidden"
+                 current === 1 && "hidden"
             )}
             />
             <Carousel
+            setApi={setApi}
                 opts={{
                     align: "start",
                     dragFree: true,
@@ -42,7 +61,7 @@ export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarou
                 <CarouselContent className="-ml-3">
                     <CarouselItem className="pl-3 basis-auto">
                         <Badge
-                            variant={value === null ? "default" : "secondary"}
+                            variant={!value ? "default" : "secondary"}
                             className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm">
                             All
                         </Badge>
@@ -67,7 +86,7 @@ export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarou
             <div 
             className={cn(
                  "absolute right-12 top-0 bottom-0 w-12 z-10 bg-linear-to-l from-white to-transparent pointer-events-none",
-                 false && "hidden"
+                 current === count && "hidden"
             )}
             />
 
