@@ -1,4 +1,12 @@
 //接收整理好的数据，把它显示成横向滚动的类别按钮
+
+
+// api.scrollSnapList()      // 获取所有滚动停靠位置
+// api.selectedScrollSnap()  // 获取当前选中的位置
+// api.scrollNext()          // 向右滚动
+// api.scrollPrev()          // 向左滚动
+// api.on("select", ...)     // 监听位置变化
+
 "use client"
 import {
     Carousel,
@@ -26,6 +34,8 @@ interface FilterCarouselProps {
 
 export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarouselProps) => {
 
+    //监听 Carousel（横向滚动栏）的位置变化，并更新 React 的状态
+
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
     const [count, setCount] = useState(0);
@@ -36,23 +46,24 @@ export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarou
         }
 
         setCount(api.scrollSnapList().length);
-        setCurrent(api.selectedScrollSnap()+1);
+        setCurrent(api.selectedScrollSnap() + 1);
 
-        api.on("select", ()=> {
-            setCurrent(api.selectedScrollSnap()+1);
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap() + 1);
         })
     }, [api]);
+
     return (
         <div className="relative w-full">
             {/* left fade */}
-            <div 
-            className={cn(
-                 "absolute left-12 top-0 bottom-0 w-12 z-10 bg-linear-to-r from-white to-transparent pointer-events-none",
-                 current === 1 && "hidden"
-            )}
+            <div
+                className={cn(
+                    "absolute left-12 top-0 bottom-0 w-12 z-10 bg-linear-to-r from-white to-transparent pointer-events-none",
+                    current === 1 && "hidden"
+                )}
             />
             <Carousel
-            setApi={setApi}
+                setApi={setApi}
                 opts={{
                     align: "start",
                     dragFree: true,
@@ -77,17 +88,17 @@ export const FilterCarousel = ({ value, isLoading, onSelect, data }: FilterCarou
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-0 z-20"/>
-                <CarouselNext className="right-0 z-20"/>
+                <CarouselPrevious className="left-0 z-20" />
+                <CarouselNext className="right-0 z-20" />
 
             </Carousel>
 
             {/* right fade */}
-            <div 
-            className={cn(
-                 "absolute right-12 top-0 bottom-0 w-12 z-10 bg-linear-to-l from-white to-transparent pointer-events-none",
-                 current === count && "hidden"
-            )}
+            <div
+                className={cn(
+                    "absolute right-12 top-0 bottom-0 w-12 z-10 bg-linear-to-l from-white to-transparent pointer-events-none",
+                    current === count && "hidden"
+                )}
             />
 
 
