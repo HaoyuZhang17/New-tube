@@ -4,6 +4,7 @@ import {db} from "@/db";
 import { categories } from "@/db/schema";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
+
 export const categoriesRouter = createTRPCRouter({
     //getMany: 获取很多条data
     //baseProcedure：所有人可以调用不用登录
